@@ -53,22 +53,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $payload = [
+
+
+    $tokenPayload = [
         "id" => $user['id'],
         "email" => $user['email'],
         "name" => $user['name'],
-        "iss" => "s4513209@glos.ac.uk",
+        "iss" => "s4513209-ct4034.uogs.co.uk",
         "iat" => time(),
-        "exp" => time() + 900 //15 minutes
+        "exp" => time() + 60 * 15 //15 minutes
     ];
 
-    $token = $jwtCtrl->encode(payload: $payload);
+    $token = $tokenController->encode(payload: $tokenPayload);
 
     setcookie(
         "AUTHORIZATION",
         "Bearer " . $token,
-        ['expires' => time() + 900, 'httponly' => true, 'secure' => true, 'samesite' => 'Strict']
+        ['expires' => $tokenPayload['exp'], 'httponly' => true, 'secure' => true, 'samesite' => 'Strict']
     );
+
+
+
+    $refreshPayload = [
+        "id" => $user['id'],
+        "email" => $user['email'],
+        "name" => $user['name'],
+        "iss" => "s4513209-ct4034.uogs.co.uk",
+        "iat" => time(),
+        "exp" => time() + 60 * 60 * 24 //1 day
+    ];
+
+    $refresh = $refreshController->encode(payload: $refreshPayload);
+
+    setcookie(
+        "REFRESH",
+        "Bearer " . $refresh,
+        ['expires' => $refreshPayload['exp'], 'httponly' => true, 'secure' => true, 'samesite' => 'Strict']
+    );
+
+
+
+
     header(header: "Location: /home.php");
     exit();
 }

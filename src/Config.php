@@ -20,6 +20,9 @@ $conn = $database->getConnection();
 
 $userGateway = new UserGateway(database: $database);
 
-$jwtCtrl = new Jwt(key: $_ENV['TOKEN_SECRET']);
 
-$auth = new Auth(userGateway: $userGateway, jwtCtrl: $jwtCtrl);
+$tokenController = new Jwt(key: $_ENV['TOKEN_SECRET']);
+$refreshController = new Jwt(key: $_ENV['REFRESH_SECRET']);
+
+$tokenAuth = new Auth(userGateway: $userGateway, tokenController: $tokenController, refreshController: $refreshController);
+

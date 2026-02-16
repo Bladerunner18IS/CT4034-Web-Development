@@ -53,7 +53,11 @@ class Jwt
         }
 
         $payload = json_decode(json: $this->base64URLDecode(text: $matches["payload"]), associative: true);
-    
+
+        if (time() > $payload['exp']) {
+
+            throw new ExpiredTokenException();
+        }
         return $payload;
     }
 
