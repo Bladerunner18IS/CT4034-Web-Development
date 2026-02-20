@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 require_once dirname(path: __DIR__) . "/src/Config.php";
 
@@ -56,10 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     $tokenPayload = [
-        "id" => $user['id'],
+        "user_id" => $user['user_id'],
         "email" => $user['email'],
         "name" => $user['name'],
-        "iss" => "s4513209-ct4034.uogs.co.uk",
+        "type" => $user['type'],
+        "iss" => "s4513209-ctxxxx.uogs.co.uk",
         "iat" => time(),
         "exp" => time() + 60 * 15 //15 minutes
     ];
@@ -75,10 +77,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     $refreshPayload = [
-        "id" => $user['id'],
+        "user_id" => $user['user_id'],
         "email" => $user['email'],
         "name" => $user['name'],
-        "iss" => "s4513209-ct4034.uogs.co.uk",
+        "type" => $user['type'],
+        "iss" => "s4513209-ctxxxx.uogs.co.uk",
         "iat" => time(),
         "exp" => time() + 60 * 60 * 24 //1 day
     ];
@@ -105,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Login</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
 </head>
 
 <body>
@@ -116,6 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email" required>
             </div>
+            <div>
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>

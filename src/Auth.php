@@ -14,8 +14,7 @@ class Auth
     {
 
         if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: $_COOKIE["AUTHORIZATION"], matches: $matches)) {
-            http_response_code(response_code: 400);
-            echo json_encode(value: ["message" => "incomplete authorization header"]);
+            
             return false;
         }
 
@@ -26,14 +25,10 @@ class Auth
 
         } catch (InvalidSignatureException) {
 
-            http_response_code(response_code: 401);
-            echo json_encode(value: ["message" => "invalid signature"]);
             return false;
 
         } catch (Exception $e) {
 
-            http_response_code(response_code: 400);
-            echo json_encode(value: ["message" => $e->getMessage()]);
             return false;
         }
 
@@ -44,8 +39,7 @@ class Auth
     {
 
         if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: $_COOKIE["REFRESH"], matches: $matches)) {
-            http_response_code(response_code: 400);
-            echo json_encode(value: ["message" => "incomplete authorization header"]);
+
             return false;
         }
 
@@ -56,22 +50,19 @@ class Auth
 
         } catch (InvalidSignatureException) {
 
-            http_response_code(response_code: 401);
-            echo json_encode(value: ["message" => "invalid signature"]);
             return false;
 
         }  catch (Exception $e) {
 
-            http_response_code(response_code: 400);
-            echo json_encode(value: ["message" => $e->getMessage()]);
             return false;
         }
 
         $payload = [
-            "id" => $user['id'],
+            "user_id" => $user['user_id'],
             "email" => $user['email'],
             "name" => $user['name'],
-            "iss" => "s4513209-ct4034.uogs.co.uk",
+            "type" => $user['type'],
+            "iss" => "s4513209-ctxxxx.uogs.co.uk",
             "iat" => time(),
             "exp" => time() + 60 * 15 //15 minutes
         ];
