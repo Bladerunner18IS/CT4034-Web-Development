@@ -24,7 +24,7 @@ $conn = $database->getConnection();
 $userGateway = new UserGateway(database: $database);
 $bikeGateway = new BikeGateway(database: $database);
 
-$tokenController = new Jwt(key: $_ENV['TOKEN_SECRET']);
+$tokenController = new Jwt(key: $_ENV['ACCESS_SECRET']);
 $refreshController = new Jwt(key: $_ENV['REFRESH_SECRET']);
 
 $tokenAuth = new Auth(userGateway: $userGateway, tokenController: $tokenController, refreshController: $refreshController);
