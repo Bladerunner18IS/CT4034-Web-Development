@@ -1,10 +1,10 @@
-*/node_modules
+*/node_modules/
 */.pnp
 */.pnp.js
 
 */coverage
 
-*/build
+*/build/
 
 */.DS_Store
 */.env.local
