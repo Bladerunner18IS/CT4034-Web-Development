@@ -52,7 +52,7 @@ class Auth
         if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: $_COOKIE["REFRESH"], matches: $matches)) {
 
             http_response_code(response_code: 401);
-            echo json_encode(value: ["message" => "Invalid access token"]);
+            echo json_encode(value: ["message" => "Invalid refresh token"]);
             exit();
         }
 

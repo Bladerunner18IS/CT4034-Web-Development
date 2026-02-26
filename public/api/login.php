@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once dirname(path: __DIR__) . "/src/Config.php";
+require_once dirname(path: __DIR__, levels: 2) . "/src/Config.php";
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -74,5 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]
     );
 
+    http_response_code(response_code: 204);
     header(header: "Location: refresh.php");
+    exit();
+}
+
+else {
+    header(header: "Allow: POST", replace: true, response_code: 405);
+    header(header: "Accept: application/json, application/x-www-form-urlencoded", replace: true);
+    exit();
 }

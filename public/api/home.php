@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once dirname(path: __DIR__) . "/src/Config.php";
+require_once dirname(path: __DIR__, levels: 2) . "/src/Config.php";
 
 $user = $tokenAuth->AuthenticateJWTToken();
 
