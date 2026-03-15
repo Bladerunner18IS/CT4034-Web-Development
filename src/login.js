@@ -1,16 +1,21 @@
-import React, { useContext, useEffect, useState } from 'react';
-import $ from 'jquery';
-import { AuthContext } from './AuthContext';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
+import api from './Api';
 
 
 const Login = () => {
+
     const [formData, setformData] = useState({
         email: '',
         password: '',
     });
 
     const [result, setresult] = useState("");
-    const [accessToken, setaccessToken] = useContext(AuthContext);
+    const [authContext, setauthContext] = useAuth();
+
+    useEffect(() => {
+        console.log(authContext['token']);
+    }, [authContext]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -24,24 +29,23 @@ const Login = () => {
 
         e.preventDefault();
 
-        $.ajax({
-            type: "POST",
-            url: "api/login.php",
-            data: JSON.stringify(formData),
-            contentType: "application/json",
-            traditional: true,
-            success(data) {
-                setaccessToken({
-                    token: data['token'],
-                    expiry: Date.now() + data['expires_in']
+        api.post("/login", formData)
+        .then(() => {
+            api.get("refresh")
+            .then(response => {
+                setauthContext({
+                    loggedIn: true,
+                    accessToken: response.data['token']
                 });
-            },
-            error(data) {
-                setresult({data});
-                
-            },
+                    
+            });
+        })
+        .catch(error => {
+            console.log('Error', error.message);
         });
     };
+
+    
 
     return (
         <div className="Login">
@@ -64,6 +68,6 @@ const Login = () => {
             <h1>{result}</h1>
         </div>
     );
-}
+};
 
 export default Login;

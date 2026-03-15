@@ -13,10 +13,10 @@ class Auth
     public function authenticateJWTToken(): array
     {
 
-        if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: $_COOKIE["AUTHORIZATION"], matches: $matches)) {
+        if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: apache_request_headers()["Authorization"], matches: $matches)) {
             
             http_response_code(response_code: 401);
-            echo json_encode(value: ["message" => "Invalid access token"]);
+            echo json_encode(value: ["message" => "Invalid access token" . apache_request_headers()]);
             exit();
         }
 
@@ -49,7 +49,7 @@ class Auth
     public function refreshJWTToken(): string
     {
 
-        if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: $_COOKIE["REFRESH"], matches: $matches)) {
+        if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: $_COOKIE['REFRESH'], matches: $matches)) {
 
             http_response_code(response_code: 401);
             echo json_encode(value: ["message" => "Invalid refresh token"]);

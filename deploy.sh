@@ -9,13 +9,12 @@ mkdir build/public
 mv build/* build/public/ 2> /dev/null #Silently fails to move /public into itself.
 mv build/.htaccess build/public/
 
-cp -r public/api build/public/
+cp -R public/api build/public/
 
 cp composer.* build/
 
-mkdir -p build/src/exceptions
-cp src/*.php src/.htaccess build/src/
-cp src/exceptions/* build/src/exceptions/
+mkdir -p build/php/exceptions
+cp -R php/* build/php
 
 
 read -q "push?Push new build to the remote server? [y/N] "

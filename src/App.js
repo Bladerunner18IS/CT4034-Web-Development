@@ -1,6 +1,6 @@
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-// import PrivateRoute from './PrivateRoute';
-// import Home from './home';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
+import PrivateRoute from './PrivateRoute';
+import Home from './home';
 import Login from './login.js';
 
 const App = () => {
@@ -12,8 +12,16 @@ const App = () => {
       </nav>
 
       <Routes>
-        <Route index/>
+        <Route element={<PrivateRoute/>}>
+          <Route path='/' element={<Home/>}/>
+          <Route path='/police'/>
+          <Route path='/admin'/>
+        </Route>
+
         <Route path='/login' element={<Login/>} />
+        <Route path='/register'/>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
