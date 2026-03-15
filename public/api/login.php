@@ -86,7 +86,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         );
 
     http_response_code(response_code: 204);
-    header(header: "Location: /");
     exit();
 }
 

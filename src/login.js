@@ -37,7 +37,7 @@ const Login = () => {
                     loggedIn: true,
                     accessToken: response.data['token']
                 });
-                    
+                window.location.href("/");
             });
         })
         .catch(error => {
