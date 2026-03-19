@@ -14,7 +14,7 @@ const Login = () => {
     const [authContext, setauthContext] = useAuth();
 
     useEffect(() => {
-        console.log(authContext['token']);
+        console.log(authContext['accessToken']);
     }, [authContext]);
 
     const handleChange = (e) => {

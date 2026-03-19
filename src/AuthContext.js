@@ -14,7 +14,6 @@ export const useAuthState = () => {
 
 export const AuthProvider = props => {
 
-    console.log(Cookies.get('loggedIn'));
     const [authContext, setauthContext] = useState({
         loggedIn: Boolean(Cookies.get('loggedIn')),
         accessToken: null

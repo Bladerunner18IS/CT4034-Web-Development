@@ -10,14 +10,16 @@ const Home = () => {
     useEffect(() => {
         console.log(bikeList);
     }, [bikeList]);
-    
-    api.get("/home")
-        .then(data => {
-            setbikeList(data);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+
+    useEffect(() => {
+        api.get("/home")
+            .then(response => {
+                setbikeList(response.data || response);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
 
     return ( 
         <div className="Home">
