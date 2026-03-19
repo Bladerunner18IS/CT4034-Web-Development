@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once dirname(path: __DIR__, levels: 2) . "/src/Config.php";
+require_once dirname(path: __DIR__, levels: 2) . "/php/Config.php";
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -70,12 +70,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'httponly' => true,
             'secure' => true,
             'samesite' => 'Strict', 
-            'path' => "/api/refresh.php"
+            'path' => "/api/refresh"
         ]
     );
 
+    setcookie(
+        "loggedIn",
+        "true",
+        [
+            'expires' => $payload['exp'],
+            'secure' => true,
+            'samesite' => 'Strict',
+            'path' => '/'
+        ]
+        );
+
     http_response_code(response_code: 204);
-    header(header: "Location: refresh.php");
     exit();
 }
 

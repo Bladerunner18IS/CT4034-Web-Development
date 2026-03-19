@@ -1,18 +1,16 @@
 import React from 'react';
-import { Route, Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuthState } from './AuthContext';
 
 
-const PrivateRoute = ({ component: Component, ...rest}) => {
-    const { authenticated } = useAuth()
+const PrivateRoute = () => {
+
+    const authState = useAuthState();
 
     return (
-        <Route
-            {...rest}
-            render={props =>
-                authenticated ? <Component {...props} /> : <Navigate to='login' />
-            }
-        />
+        (authState['loggedIn']
+            ? <Outlet />
+            : <Navigate to='/login' />)
     );
 };
 
