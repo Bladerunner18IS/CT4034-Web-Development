@@ -22,6 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
+    $v = new Validator($data);
+
+    $v->field('email')->required()->email();
+    $v->field('password')->required();
+
+    if(!$v->is_valid()){
+        http_response_code(response_code: 400);
+        echo json_encode(value: ["validation_errors" => $v->error_messages]);
+        exit();
+    }
+
 
     if ($data === null) {
         http_response_code(response_code: 400);

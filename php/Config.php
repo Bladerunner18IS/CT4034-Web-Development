@@ -6,6 +6,7 @@ require __DIR__ . "/UserGateway.php";
 require __DIR__ . "/BikeGateway.php";
 require __DIR__ . "/Jwt.php";
 require __DIR__ . "/Auth.php";
+require __DIR__ . "/Validator.php";
 
 $currentPage = $_SERVER['REQUEST_URI'];
 

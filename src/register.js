@@ -1,19 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+import React, { useState } from 'react';
 import api from './Api';
 
-
-const Login = () => {
+const Register = () => {
 
     const [formData, setformData] = useState({
-        email: '',
-        password: '',
-    });
+            email: '',
+            name: '',
+            password: '',
+        });
 
     const [errors, seterrors] = useState({});
     const [response, setresponse] = useState("");
-    const [authContext, setauthContext] = useAuth();
-    
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,21 +21,18 @@ const Login = () => {
         });
     };
 
-    const handleLogin = (e) => {
+    const handleRegister = (e) => {
 
         e.preventDefault();
 
-        api.post("/login", formData)
-        .then(() => {
-            api.post("refresh")
-            .then(response => {
-                setauthContext({
-                    loggedIn: true,
-                    accessToken: response.data['token']
-                });
-                window.location.href = "/";
-            });
+        api.post("/register", formData)
+        .then(response => {
+            setresponse(response.data.message)
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 2000);
         })
+
         .catch(error => {
             if (error.response) {
                 if (error.response.data.message) {
@@ -54,13 +49,12 @@ const Login = () => {
         });
     };
 
-    
 
     return (
-        <div className="Login">
-            <h2>Login</h2>
-            <form 
-                onSubmit={handleLogin}
+        <div class="container">
+            <h2>Public Registration</h2>
+            <form
+                onSubmit={handleRegister}
             >
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -68,17 +62,22 @@ const Login = () => {
                     {errors.email && <span className='error'>{errors.email}</span>}
                 </div>
                 <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} required/>
+                    {errors.name && <span className='error'>{errors.name}</span>}
+                </div>
+                <div class="form-group">
                     <label for="password">Password:</label>
                     <input type="password" name="password" value={formData.password} onChange={handleChange} required/>
                     {errors.password && <span className='error'>{errors.password}</span>}
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Login"/>
-                    {response && <span className='response'>{response}</span>}
+                    <input type="submit" value="Register"/>
+                    {response && <span className='error'>{response}</span>}
                 </div>
             </form>
         </div>
     );
 };
 
-export default Login;
+export default Register;
