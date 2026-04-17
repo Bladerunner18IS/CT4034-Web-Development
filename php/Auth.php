@@ -85,7 +85,7 @@ class Auth
             "email" => $user['email'],
             "name" => $user['name'],
             "type" => $user['type'],
-            "iss" => "s4513209-ctxxxx.uogs.co.uk",
+            "iss" => "s4513209-ct4034.uogs.co.uk",
             "iat" => time(),
             "exp" => time() + $_ENV['ACCESS_TTL']
         ];

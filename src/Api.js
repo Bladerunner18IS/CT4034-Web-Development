@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import Cookies from "js-cookie"
+import Roles from "./Roles"
 
 const api = axios.create({
     baseURL: '/api',
@@ -62,11 +64,12 @@ api.interceptors.response.use(
         if (!isRefreshing) {
             isRefreshing = true;
             try {
-                const response = await axios.get('/api/refresh');
+                const response = await axios.post('/api/refresh');
                 const newAccessToken = response.data?.token;
 
+                const role = Cookies.get('role');
                 setAuthContextFn({
-                    loggedIn: true,
+                    role: Roles.isValid(role) ? role : Roles.GUEST,
                     accessToken: newAccessToken,
                 });
 
@@ -106,7 +109,7 @@ export const AuthInterceptor = ({ children }) => {
     const [authContext, setauthContext] = useAuth();
 
     const logoutUser = () => {
-        setauthContext({ loggedIn: false, accessToken: null });
+        setauthContext({ role: Roles.GUEST, accessToken: null });
         window.location.href = '/login';
     };
 

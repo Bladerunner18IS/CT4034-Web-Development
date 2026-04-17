@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import api from './Api';
+import Roles from './Roles'
+import Cookies from 'js-cookie';
 
 
 const Login = () => {
@@ -31,8 +33,9 @@ const Login = () => {
         .then(() => {
             api.post("refresh")
             .then(response => {
+                var role = Cookies.get('role');
                 setauthContext({
-                    loggedIn: true,
+                    role: Roles.isValid(role) ? role : Roles.GUEST,
                     accessToken: response.data['token']
                 });
                 window.location.href = "/";

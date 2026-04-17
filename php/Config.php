@@ -7,6 +7,7 @@ require __DIR__ . "/BikeGateway.php";
 require __DIR__ . "/Jwt.php";
 require __DIR__ . "/Auth.php";
 require __DIR__ . "/Validator.php";
+require __DIR__ . "/ImageGateway.php";
 
 $currentPage = $_SERVER['REQUEST_URI'];
 
@@ -24,6 +25,7 @@ $conn = $database->getConnection();
 
 $userGateway = new UserGateway(database: $database);
 $bikeGateway = new BikeGateway(database: $database);
+$imageGateway = new ImageGateway(database: $database);
 
 $tokenController = new Jwt(key: $_ENV['ACCESS_SECRET']);
 $refreshController = new Jwt(key: $_ENV['REFRESH_SECRET']);

@@ -54,4 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
 
     header(header: "Allow: POST", replace: true, response_code: 405);
+    header(header: "Accept: application/json, application/x-www-form-urlencoded", replace: true);
+    exit;
 }

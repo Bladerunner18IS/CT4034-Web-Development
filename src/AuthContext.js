@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
+import Roles from './Roles';
 
 const AuthContext = createContext();
 
@@ -14,8 +15,10 @@ export const useAuthState = () => {
 
 export const AuthProvider = props => {
 
+    var role = Cookies.get('role');
+
     const [authContext, setauthContext] = useState({
-        loggedIn: Boolean(Cookies.get('loggedIn')),
+        role: Roles.isValid(role) ? role : Roles.GUEST,
         accessToken: null
     });
 

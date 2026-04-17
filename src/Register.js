@@ -30,7 +30,7 @@ const Register = () => {
             setresponse(response.data.message)
             setTimeout(() => {
                 window.location.href = "/login";
-            }, 2000);
+            }, 3000);
         })
 
         .catch(error => {

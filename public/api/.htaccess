@@ -1,8 +1,8 @@
-DirectoryIndex home.php
-
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-l
+
+RewriteRule ^images\/([A-Za-z]+)\/([0-9]+)\/([^\s]+)\.(jpg|jpeg|png|gif|bmp)$ /api/images.php?type=$1&bike_id=$2&file=$3.$4&ext=$4 [L]
 
 RewriteRule ^(([A-Za-z0-9\-]+/)*[A-Za-z0-9\-]+)?$ $1.php

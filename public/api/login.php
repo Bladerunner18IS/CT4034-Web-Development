@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "email" => $user['email'],
         "name" => $user['name'],
         "type" => $user['type'],
-        "iss" => "s4513209-ctxxxx.uogs.co.uk",
+        "iss" => "s4513209-ct4034.uogs.co.uk",
         "iat" => time(),
         "exp" => time() + $_ENV['REFRESH_TTL']
     ];
@@ -86,8 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     setcookie(
-        "loggedIn",
-        "true",
+        "role",
+        $user['type'],
         [
             'expires' => $payload['exp'],
             'secure' => true,
