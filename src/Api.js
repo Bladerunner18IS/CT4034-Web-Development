@@ -14,7 +14,8 @@ const api = axios.create({
 export default api;
 
 // Module-level hooks/callbacks that will be provided by the Auth component.
-let getAccessToken = () => null;
+let cachedAccessToken = null;
+let getAccessToken = () => cachedAccessToken;
 let setAuthContextFn = () => {};
 let logoutFn = () => { window.location.href = '/login'; };
 
@@ -67,6 +68,10 @@ api.interceptors.response.use(
                 const response = await axios.post('/api/refresh');
                 const newAccessToken = response.data?.token;
 
+                // Update the module-level cache synchronously so the request
+                // interceptor picks up the new token before the retry fires.
+                cachedAccessToken = newAccessToken;
+
                 const role = Cookies.get('role');
                 setAuthContextFn({
                     role: Roles.isValid(role) ? role : Roles.GUEST,
@@ -100,7 +105,11 @@ api.interceptors.response.use(
 
 // Called by the Auth wrapper to provide access to auth state and actions.
 export const registerAuthHandlers = ({ getToken, setAuthContext, logout }) => {
-    if (typeof getToken === 'function') getAccessToken = getToken;
+    if (typeof getToken === 'function') {
+        getAccessToken = getToken;
+        // Sync the cache immediately with whatever the current token is.
+        cachedAccessToken = getToken();
+    }
     if (typeof setAuthContext === 'function') setAuthContextFn = setAuthContext;
     if (typeof logout === 'function') logoutFn = logout;
 };
@@ -109,12 +118,16 @@ export const AuthInterceptor = ({ children }) => {
     const [authContext, setauthContext] = useAuth();
 
     const logoutUser = () => {
+        cachedAccessToken = null;
         setauthContext({ role: Roles.GUEST, accessToken: null });
         window.location.href = '/login';
     };
 
     // Register synchronous getters/setters so interceptors have access
     // to auth state before child components run their effects.
+    // Also keep cachedAccessToken in sync with the current React state value
+    // so the request interceptor never reads a stale token after re-renders.
+    cachedAccessToken = authContext?.accessToken ?? null;
     registerAuthHandlers({
         getToken: () => authContext?.accessToken,
         setAuthContext: (ctx) => setauthContext((prev) => ({ ...prev, ...ctx })),

@@ -1,43 +1,68 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import api from './Api';
 import axios from 'axios';
+import { useAuthState } from './AuthContext';
+import Roles from './Roles';
 
 const DataContext = createContext();
 
 
-export const useData = () => useContext(DataContext);
+export const useData = () => {
+    const ctx = useContext(DataContext);
+    if (!ctx) throw new Error("useData must be used inside DataProvider");
+    return ctx;
+};
 
 
 export const useDataState = () => {
-    const [state] = useContext(DataContext);
-    return state;
+    const ctx = useContext(DataContext);
+    if (!ctx) throw new Error("useDataState must be used inside DataProvider");
+    return ctx[0];
 }
 
-export const requestUserData = () => {
+export const requestBikes = async () => {
+    try {
+        const response = await api.get("/bikes");
+        const bikes = response.data;
 
-    api.get("/bikes")
-        .then(response => {
-            const bikes = response.data;
-            
-            console.log(bikes);
-            requestImages(bikes).then(images => {
-                for (const [bikeId, imgs] of Object.entries(images || {})) {
-                    if (bikes[bikeId]) {
-                        bikes[bikeId].images = imgs;
-                    }
-                }
-                console.log('bikes with images', bikes);
+        const images = await requestBikeImages(bikes);
 
-                return bikes;
+        for (const [bikeId, imgs] of Object.entries(images || {})) {
+            if (bikes[bikeId]) {
+                bikes[bikeId].images = imgs;
+            }
+        }
 
-            }).catch(err => console.log(err));
-        })
-        .catch(error => {
-            console.log(error);
-        });
-}
+        return bikes;
+    } catch (err) {
+        console.log(err);
+        return null;
+    }
+};
 
-const requestImages = async (bikes) => {
+export const requestUser = async () => {
+    try {
+        const response = await api.get('/users');
+        return response.data;
+    } catch (err) {
+        console.log('requestUser error', err);
+        return null;
+    }
+};
+
+export const requestCases = async () => {
+    try {
+        const response = await api.get('/cases');
+        return response.data;
+    } catch (err) {
+        console.log('requestCases error', err);
+        return null;
+    }
+};
+
+
+
+const requestBikeImages = async (bikes) => {
     const images = {};
 
     const bikeEntries = Object.entries(bikes || {});
@@ -71,7 +96,42 @@ const requestImages = async (bikes) => {
 
 export const DataProvider = props => {
 
-    const [dataContext, setdataContext] = useState(requestUserData());
+    const [dataContext, setdataContext] = useState({
+        bikes: [],
+        cases: null,
+        user: null
+    });
+
+    const authState = useAuthState();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const bikeDataPromise = authState.role === Roles.PUBLIC ? requestBikes() : [];
+            const userPromise = requestUser();
+            const casesPromise = requestCases();
+
+            const [bikeData, userData, casesData] = await Promise.all([bikeDataPromise, userPromise, casesPromise]);
+
+            const bikesArray = Array.isArray(bikeData)
+                ? bikeData
+                : Object.entries(bikeData || {}).map(([bikeId, bike]) => ({
+                    ...bike,
+                    bike_id: Number(bikeId),
+                }));
+
+            const casesArray = Array.isArray(casesData) ? casesData : Object.values(casesData || {});
+
+            setdataContext({
+                bikes: bikesArray,
+                cases: casesArray,
+                user: userData
+            });
+        };
+
+        if (authState.role !== Roles.GUEST) {
+            fetchData();
+        }
+    }, [authState.role]);
 
     return(
         <DataContext.Provider value={[dataContext, setdataContext]}>

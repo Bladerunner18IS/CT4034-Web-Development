@@ -9,8 +9,9 @@ export const useAuth = () => useContext(AuthContext);
 
 
 export const useAuthState = () => {
-    const [state] = useContext(AuthContext);
-    return state;
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error("useAuthState must be used inside AuthProvider");
+    return ctx[0];
 }
 
 export const AuthProvider = props => {
