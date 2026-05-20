@@ -5,6 +5,8 @@ This project is an undergraduate coursework submission for the University of Glo
 
 The application is built with a PHP API backend, a React frontend, and a MySQL database, all hosted on a single Apache instance. Security and access control were core priorities throughout the design.
 
+**DEMO** - https://s4513209-ct4034.uogs.co.uk
+
 ### Features
 
 - User registration and authentication using short‑lived access tokens and long‑lived refresh tokens.
