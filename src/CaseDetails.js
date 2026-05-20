@@ -32,8 +32,7 @@ const CaseDetails = () => {
     const [newStatus, setNewStatus] = useState('open');
     const [message, setMessage] = useState('');
 
-    const roleFromPath = useLocation().pathname.match(/police|admin/);
-    const doc = new jsPDF();
+    const type = dataState.user?.type || 'police';
     const headerRef = useRef(null);
     const bodyRef = useRef(null);
 
@@ -101,7 +100,6 @@ const CaseDetails = () => {
 
         try {
             await api.post(`/cases?reference=${encodeURIComponent(caseReference)}&logs=1`, {
-                officer_id: 1,
                 description: description.trim(),
                 new_status: newStatus,
             });
@@ -260,7 +258,7 @@ const CaseDetails = () => {
                     </div>
                 </div>
 
-                {roleFromPath === 'police' ? (
+                {type === 'police' ? (
                     <div className="rounded-3xl bg-white border border-[#DEE5E5] p-6 shadow-sm">
                         <h2 className="text-xl font-semibold text-[#37323E]">Submit a new log entry</h2>
                         <p className="mt-1 text-sm text-[#6D6A75]">Add a new officer update for this case.</p>

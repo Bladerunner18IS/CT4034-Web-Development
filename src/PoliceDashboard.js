@@ -9,7 +9,7 @@ const PoliceDashboard = () => {
     const bikes = dataState?.bikes || [];
 
     const activeOpenCases = useMemo(
-        () => cases.filter((c) => c.case_status === 'open'),
+        () => cases.filter((c) => c.case_status === 'open' && c.officer_updated),
         [cases]
     );
 

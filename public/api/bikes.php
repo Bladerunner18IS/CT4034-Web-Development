@@ -6,10 +6,11 @@ require_once dirname(path: __DIR__, levels: 2) . "/php/Config.php";
 if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     $user = $tokenAuth->authenticateJWTToken();
+    $bikes = [];
 
     if (isset($user['type'])) {
         
-        if (in_array($user['type'], ['police', 'admin']) && isset($_GET[$bike_id])) {
+        if (in_array($user['type'], ['police', 'admin']) && isset($_GET['bike_id'])) {
 
             $bikes = $bikeGateway->getByBikeId($_GET['bike_id']);
         

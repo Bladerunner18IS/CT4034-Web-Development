@@ -29,7 +29,7 @@ class CaseGateway
         return $statement->fetchAll(mode: PDO::FETCH_ASSOC);
     }
 
-    public function getCasesForPolice(string $range = 'all'): array
+    public function getCasesForPolice(int $officerId, string $range = 'all'): array
     {
         $sql = <<<'EOD'
             SELECT 
@@ -37,13 +37,19 @@ class CaseGateway
                 bikes.brand, 
                 bikes.model, 
                 bikes.manufacturer_part_number, 
-                images.image_filename 
+                images.image_filename,
+                EXISTS (
+                    SELECT 1
+                    FROM case_logs
+                    WHERE case_logs.case_id = cases.case_id
+                    AND case_logs.officer_id = :officer_id
+                ) AS officer_updated
             FROM cases
             INNER JOIN bikes ON bikes.bike_id = cases.bike_id
             INNER JOIN images ON images.bike_id = bikes.bike_id AND images.is_primary = 1
         EOD;
 
-        $params = [];
+        $params = [':officer_id' => $officerId];
 
         $startDate = $this->getRangeStartDate($range);
         if ($startDate !== null) {

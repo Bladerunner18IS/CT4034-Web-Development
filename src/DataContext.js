@@ -98,7 +98,7 @@ export const DataProvider = props => {
 
     const [dataContext, setdataContext] = useState({
         bikes: [],
-        cases: null,
+        cases: [],
         user: null
     });
 

@@ -22,7 +22,7 @@ RewriteRule .* - [E=HTTP_AUTHORIZATION:%1]
 #Neat-ify some api endpoints
 RewriteRule ^users\/([0-9]+)\/?$ users.php?id=$1 [L,QSA]
 RewriteRule ^cases\/([a-f0-9]{10})\/logs\/?$ cases.php?case_ref=$1&logs=1 [L,QSA]
-RewriteRule ^images\/([A-Za-z]+)\/([0-9]+)\/([^\s]+)\.(jpg|jpeg|png|gif|bmp)$ /api/images.php?type=$1&bike_id=$2&file=$3.$4&ext=$4 [L,QSA]
+RewriteRule ^images\/([A-Za-z]+)\/([0-9]+)\/([^\s]+)\.(jpg|jpeg|png|gif|bmp|webp)$ /api/images.php?type=$1&bike_id=$2&file=$3.$4&ext=$4 [L,QSA]
 
 #Route to *.php
 RewriteRule ^(([A-Za-z0-9\-]+/)*[A-Za-z0-9\-]+)?$ $1.php

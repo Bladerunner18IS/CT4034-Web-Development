@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $range = isset($_GET['range']) ? strtolower(trim($_GET['range'])) : 'all';
 
         if (isset($user['type']) && in_array($user['type'], ['police', 'admin'])) {
-            $cases = $caseGateway->getCasesForPolice($range);
+            $cases = $caseGateway->getCasesForPolice($user['user_id'], $range);
         } else {
             $cases = $caseGateway->getCasesByUserid(id: $user['user_id']);
         }
@@ -62,6 +62,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     if (isset($_GET['logs'])) {
 
+        if ($user['type'] !== "police") {
+
+            http_response_code(response_code: 403);
+            echo json_encode(value: ["message" => "Unauthorized"]);
+            exit();
+        }
+
         $caseIdentifier = $_GET['case_id'] ?? $_GET['reference'] ?? null;
         if ($caseIdentifier === null) {
             http_response_code(response_code: 400);
@@ -77,6 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         }
 
         $data['case_id'] = $caseId;
+        $data['officer_id'] = $user['user_id'];
 
         $validator = new Validator($data);
 

@@ -1,3 +1,4 @@
+import React from 'react';
 import CaseSearch from './CaseSearch';
 import { useDataState } from './DataContext';
 
