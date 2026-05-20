@@ -73,13 +73,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $refreshToken = $refreshController->encode(payload: $payload);
 
+    $secureCookie = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+
     setcookie(
         "REFRESH",
         "Bearer " . $refreshToken,
         [
             'expires' => $payload['exp'],
             'httponly' => true,
-            'secure' => true,
+            'secure' => $secureCookie,
             'samesite' => 'Strict', 
             'path' => "/api/refresh"
         ]
@@ -90,11 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user['type'],
         [
             'expires' => $payload['exp'],
-            'secure' => true,
+            'secure' => $secureCookie,
             'samesite' => 'Strict',
             'path' => '/'
         ]
         );
+    
+
 
     http_response_code(response_code: 204);
     exit();

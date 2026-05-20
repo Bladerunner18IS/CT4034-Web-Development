@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__ . '/exceptions/ExpiredTokenException.php';
 class Jwt
 {
 

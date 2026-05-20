@@ -4,6 +4,7 @@ require dirname(path: __DIR__) . "/vendor/autoload.php";
 require __DIR__ . "/Database.php";
 require __DIR__ . "/UserGateway.php";
 require __DIR__ . "/BikeGateway.php";
+require __DIR__ . "/CaseGateway.php";
 require __DIR__ . "/Jwt.php";
 require __DIR__ . "/Auth.php";
 require __DIR__ . "/Validator.php";
@@ -25,6 +26,7 @@ $conn = $database->getConnection();
 
 $userGateway = new UserGateway(database: $database);
 $bikeGateway = new BikeGateway(database: $database);
+$caseGateway = new CaseGateway(database: $database);
 $imageGateway = new ImageGateway(database: $database);
 
 $tokenController = new Jwt(key: $_ENV['ACCESS_SECRET']);

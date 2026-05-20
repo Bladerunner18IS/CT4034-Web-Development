@@ -50,7 +50,7 @@ class Validator {
     function field($name, $alias = null){
         $this->current_field = $name;
         $this->next = true;
-        $this->curent_alias = $alias;
+        $this->current_alias = $alias;
         return $this;
     }
 
@@ -64,7 +64,7 @@ class Validator {
 
     function alpha_ap(){
         if($this->next && $this->exists() && !ctype_alpha(str_replace('\'', '', $this->data[$this->current_field]))){
-            $this->add_error_message('alpha');
+            $this->add_error_message('alpha_ap');
             $this->next = false;
         }
         return $this;
@@ -105,6 +105,15 @@ class Validator {
     function must_contain($chars){
         if($this->next && $this->exists() && !preg_match("/[".$chars."]/i", $this->data[$this->current_field])){
             $this->add_error_message('must_contain', ['chars' => $chars]);
+            $this->next = false;
+        }
+        return $this;
+    }
+
+    function exact_match(array $values){
+        $expression = "/^" . implode("|", $values) . "$/";
+        if($this->next && $this->exists() && !preg_match($expression, $this->data[$this->current_field])){
+            $this->add_error_message('exact_match', ['values' => $values]);
             $this->next = false;
         }
         return $this;

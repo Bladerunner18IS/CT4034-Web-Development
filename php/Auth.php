@@ -16,7 +16,7 @@ class Auth
         if (!preg_match(pattern: "/^Bearer\s+(.*)$/", subject: apache_request_headers()["Authorization"], matches: $matches)) {
             
             http_response_code(response_code: 401);
-            echo json_encode(value: ["message" => "Invalid access token" . apache_request_headers()]);
+            echo json_encode(value: ["message" => "Invalid access token"]);
             exit();
         }
 
