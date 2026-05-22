@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $v->field('password')->required();
 
     if(!$v->is_valid()){
-        http_response_code(response_code: 400);
+        http_response_code(response_code: 422);
         echo json_encode(value: ["validation_errors" => $v->error_messages]);
         exit();
     }

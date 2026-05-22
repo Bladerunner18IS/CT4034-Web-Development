@@ -63,7 +63,7 @@ class Validator {
     }
 
     function alpha_ap(){
-        if($this->next && $this->exists() && !ctype_alpha(str_replace('\'', '', $this->data[$this->current_field]))){
+        if($this->next && $this->exists() && !ctype_alpha(str_replace(['\'', ' '], '', $this->data[$this->current_field]))){
             $this->add_error_message('alpha_ap');
             $this->next = false;
         }

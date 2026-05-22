@@ -67,7 +67,7 @@ const PublicDash = () => {
                                         Dashboard overview
                                     </p>
                                     <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-[#37323E] sm:text-5xl">
-                                        {greeting}, {userName}
+                                        {greeting}, {userName.substring(0, userName.indexOf(' '))}
                                     </h1>
                                     <p className="mt-3 max-w-2xl text-base leading-7 text-[#6D6A75]">
                                         Manage your bikes and track investigations from one secure dashboard. Keep your records safe so you're ready if a theft occurs.

@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === "GET") {
     $v->field('password')->required()->min_len(8)->max_len(50)->must_contain('@#$&!.')->must_contain('a-z')->must_contain('A-Z')->must_contain('0-9');
 
     if(!$v->is_valid()){
-        http_response_code(response_code: 400);
+        http_response_code(response_code: 422);
         echo json_encode(value: ["validation_errors" => $v->error_messages]);
         exit();
     }

@@ -124,6 +124,28 @@ class CaseGateway
         }
     }
 
+    public function getCaseOwnerId(int $caseId): int
+    {
+        $sql = <<<'EOD'
+            SELECT user_id
+            FROM cases
+            WHERE case_id = :case_id
+            LIMIT 1
+        EOD;
+
+        $statement = $this->conn->prepare($sql);
+        $statement->bindValue(param: ':case_id', value: $caseId, type: PDO::PARAM_INT);
+        
+        if (!$statement->execute()) {
+
+            http_response_code(response_code: 500);
+            echo json_encode(value: ["message" => "SQL Error"]);
+            exit();
+        }
+
+        return $statement->fetch()['user_id'];
+    }
+
     public function getLogsForCase(int $caseId): array
     {
         $sql = <<<'EOD'

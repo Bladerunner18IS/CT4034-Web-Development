@@ -17,7 +17,7 @@ const PoliceDashboard = () => {
         if (!value) return 'Unknown';
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) return value;
-        return date.toLocaleDateString('en-US', {
+        return date.toLocaleDateString('en-GB', {
             year: 'numeric',
             month: 'short',
             day: 'numeric',

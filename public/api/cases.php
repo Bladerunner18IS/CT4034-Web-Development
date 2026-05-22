@@ -23,6 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             exit();
         }
         
+        if ($user['type'] === "public" && $caseGateway->getCaseOwnerId($caseId) !== $user['user_id']) {
+
+            http_response_code(response_code: 403);
+            echo json_encode(value: ["message" => "Unauthorized"]);
+            exit();
+        }
+
         $caseLogs = $caseGateway->getLogsForCase($caseId);
 
         http_response_code(response_code: 200);
@@ -94,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $validator->field('new_status')->required()->exact_match(["open", "closed"]);
 
         if (!$validator->is_valid()) {
-            http_response_code(response_code: 400);
+            http_response_code(response_code: 422);
             echo json_encode(value: ["validation_errors" => $validator->error_messages]);
             exit();
         }
@@ -120,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         $validator->field('description')->required()->max_len(1300);
 
         if (!$validator->is_valid()) {
-            http_response_code(response_code: 400);
+            http_response_code(response_code: 422);
             echo json_encode(value: ["validation_errors" => $validator->error_messages]);
             exit();
         }

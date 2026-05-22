@@ -12,15 +12,15 @@ const Cases = () => {
     const [selectedBikeId, setSelectedBikeId] = useState(null);
     const [notes, setNotes] = useState('');
 
-    const toggleExpand = async (caseId) => {
-        setExpanded(prev => ({ ...prev, [caseId]: !prev[caseId] }));
-        if (!logs[caseId]) {
+    const toggleExpand = async (caseRef) => {
+        setExpanded(prev => ({ ...prev, [caseRef]: !prev[caseRef] }));
+        if (!logs[caseRef]) {
             try {
-                const resp = await api.get(`/cases/${caseId}/logs`);
-                setLogs(prev => ({ ...prev, [caseId]: resp.data }));
+                const resp = await api.get(`/cases/${caseRef}/logs`);
+                setLogs(prev => ({ ...prev, [caseRef]: resp.data }));
             } catch (err) {
                 console.log('Failed to load logs', err);
-                setLogs(prev => ({ ...prev, [caseId]: [] }));
+                setLogs(prev => ({ ...prev, [caseRef]: [] }));
             }
         }
     };
@@ -64,29 +64,28 @@ const Cases = () => {
 
                 <div className="mt-6 space-y-4">
                     {!cases || cases.length === 0 && <p className="text-sm text-[#6D6A75]">No cases found.</p>}
-                    {cases && cases.length > 0 && cases.map((c, index) => {
-                        const caseNumber = index + 1;
+                    {cases && cases.length > 0 && cases.map((c) => {
                         const bike = (dataState?.bikes || []).find(b => Number(b.bike_id) === Number(c.bike_id));
                         const bikeModel = bike?.model || `Bike #${c.bike_id}`;
 
-                        const logsList = logs[c.case_id] || [];
+                        const logsList = logs[c.reference] || [];
 
                         return (
-                            <div key={c.case_id} className="bg-white rounded-lg p-4 shadow cursor-pointer" onClick={() => toggleExpand(c.case_id)}>
+                            <div key={c.reference} className="bg-white rounded-lg p-4 shadow cursor-pointer" onClick={() => toggleExpand(c.reference)}>
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm text-[#6D6A75]">Case {caseNumber} • {bikeModel}</p>
+                                        <p className="text-sm text-[#6D6A75]">Case Reference {c.reference} • {bikeModel}</p>
                                         <p className="mt-1 text-lg font-semibold text-[#37323E]">Status: {c.case_status}</p>
                                         <p className="text-sm text-[#6D6A75]">Opened: {c.date_opened}</p>
                                     </div>
                                     <div className="text-sm text-[#DE9E36]">
-                                        <span className={`inline-block transform transition-transform duration-200 ${expanded[c.case_id] ? 'rotate-180' : 'rotate-0'}`}>
+                                        <span className={`inline-block transform transition-transform duration-200 ${expanded[c.reference] ? 'rotate-0' : 'rotate-90'}`}>
                                             ▼
                                         </span>
                                     </div>
                                 </div>
 
-                                {expanded[c.case_id] && (
+                                {expanded[c.reference] && (
                                     <div className="mt-4 border-t pt-4">
                                         {(!logsList || logsList.length === 0) ? (
                                             <p className="text-sm text-[#6D6A75]">No log entries.</p>
